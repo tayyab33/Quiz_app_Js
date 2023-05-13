@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+  <head>
+  	<style type="text/css">
+  		.box{
+  			color: white;
+  			margin: auto;
+  			width: 650px;
+  			height: 500px;
+  			background-color: #000b00;
+  			text-align: center;
+  			padding: 5px;
+  			border-radius: 4px;
+  		}
+  		h2{
+  			margin: 1px 4px 0px 0px;
+  			font-size: 50px;
+  			border-bottom: 2px solid #f00;
+  		}
+  		.option0, .option1, .option2, .option3{
+  			  width: 200px;
+			  height: 80px;
+			  background-color: #011;
+			  display: flex;
+			  justify-content: center;
+			  align-items: center;
+			  font-size: 24px;
+			  font-weight: bold;
+			  margin: 10px;
+			  border-radius: 10px;
+			  box-shadow: 0px 5px 5px #888888;
+  		}
+  		.options{
+  			  margin: auto;
+  			  width: 500px;
+			  height: 300px;
+			  display: flex;
+			  flex-wrap: wrap;
+			  justify-content: center;
+			  align-items: center;
+  		}
+  		.disabled {
+			  opacity: 0.5;
+			  pointer-events: none;
+			}
+     #button {
+		  padding: 10px 20px;
+		  background-color: #4CAF50;
+		  color: #ffffff;
+		  font-size: 16px;
+		  border: none;
+		  border-radius: 5px;
+		  cursor: pointer;
+		  float: right;
+		  margin-right: 4rem;
+     }
+     .display {
+		  display: none;
+     }
+
+#button:hover {
+  background-color: #45a049;
+}
+
+#button:active {
+  background-color: #3e8e41;
+}
+.result{
+	  display: none;
+	  font-size: 34px;
+
+}
+  	</style>
+  </head>
+  <body >
+     <div class="box">
+     	<h2>Quiz</h2>
+     	<div class="questions">
+     		   <h2 id="question"> </h2>
+     		    <div class="options">
+  
+     		    </div>
+     		     <button id="button" class="display">&rarr;</button>
+     		     <div class="result">
+     		     	      
+     		     </div>
+     	</div>
+     </div>	   
+  </body>
+</html>
+<script type="text/javascript">
+      
+	    // pass counter var;
+
+	            var pass = 1;
+              var arrayindex=0;
+	    // Questions obj;
+
+							var obj = {
+								1 : "What is the national language of Pakistan?",
+								2 : "What is the highest peak in Pakistan?",
+								3 : "What is the currency of Pakistan?",
+								4 : "Who is the founder of Pakistan?",
+								5 : "What is the largest city in Pakistan?",
+								6 : "Which river flows through Pakistan?",
+								7 : "What is the most popular sport in Pakistan?",
+								8 : "Which province of Pakistan is known as the \"Land of the Pure\"?" 
+							}
+
+			 // Answer arrays;
+
+							var answerarrays = ["Urdu", "K2", "Rupee", "Jinnah", "Karachi", "Indus", "Cricket", "Punjab"];
+
+       // main implementation
+         addEventListener("load", () => {
+         	   // get the recivers;
+         	   let h3 = document.querySelector("#question");
+         	   let options = document.querySelector(".options");
+         	   let button = document.querySelector("#button");
+             let div = 4;
+             let choselist = [];
+             let selectAnswers = [];
+              
+
+         	   // assing the question;
+         	   function runChoice(){
+             h3.innerHTML = obj[pass];
+
+             //choseing right and 3 multiple choice randomly
+            var correctAns = [answerarrays[arrayindex]];
+            function arrayGenerate(){
+             for(i=0; i<div-1; i++){
+                correctAns.push(answerarrays[Math.floor(Math.random() * answerarrays.length)]);
+             }
+              return correctAns;
+              console.log("has dublicate");
+           }
+
+             // assing to array;
+              correctAns = arrayGenerate();
+
+             // checking dublicate 
+							var hasDuplicates = (new Set(correctAns)).size !== correctAns.length;
+							if(hasDuplicates){
+							 correctAns = [answerarrays[arrayindex]];
+               correctAns = arrayGenerate();
+							 }
+
+
+             // suffle the generated array
+
+             function suffle(array){
+                for(let i = array.length -1; i> 0; i--){
+                	var j = Math.floor(Math.random() * (i + 1));
+                	var temp = array[i];
+                	array[i] = array[j];
+                	array[j] = temp;
+                }
+                return array;
+             }
+             correctAns = suffle(correctAns);
+
+
+             //put this suffle to option div
+
+             for(let i = 0; i<correctAns.length; i++){
+             	 let divs = document.createElement('div');
+             	  divs.textContent = correctAns[i];
+             	  divs.classList.add('option'+i);
+                options.appendChild(divs);
+             }
+            }
+            runChoice();
+            divs();
+             //check answer select 
+             
+          
+             
+             function divs(){
+             	   let chlidElements = options.children;
+                 chlidElements = Array.from(chlidElements);
+                 chlidElements.forEach((child) => {
+						     child.addEventListener('click', (e) => {
+						     chlidElements.forEach((element) => {
+						     	  if(element !== e.currentTarget){
+						     	  	 element.classList.toggle('disabled');
+                       button.classList.toggle('display');
+						     	  }
+						     })
+						     answer = e.target.textContent
+						     return handleanswer(answer);
+						  });
+						});
+						}
+						function handleanswer(data){
+                choselist.push(data);
+                 // selectAnswers.forEach((value) => {
+						 	   // alert(value);
+					     	 // })
+						}
+						button.addEventListener('click', () => {
+               let correctanswer = choselist[choselist.length - 1];
+               selectAnswers.push(correctanswer);
+               pass += 1;
+               arrayindex += 1;
+               options.innerHTML = '';
+               choselist = [];
+               button.classList.toggle('display');
+               if (pass <= Object.keys(obj).length) {
+                    runChoice();
+                    divs();
+               }
+                 else {
+							   alert('Quiz Completed');
+							    count = 0;
+							    let filter = answerarrays.filter((elem, index) => {
+							    	  return  answerarrays[index] === selectAnswers[index] ? count++ :  0;
+							    });
+							    h3.innerHTML = `You have got ${answerarrays.length} out of ${count} correct.`
+							  }
+						})
+            
+         })
+            
+
+
+</script>
